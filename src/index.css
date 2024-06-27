@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+/* Importance smooth */
+html {
+    scroll-behavior: smooth; 
+}
+
+@font-face {
+  font-family: 'Tungsten';
+  src: url('./assets/fonts/Tungsten-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Valorant';
+  src: url('./assets/fonts/Valorant-Font.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+.nav,.startText{
+  background-color: rgba(189, 182, 182, 0.623);
+}

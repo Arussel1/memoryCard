@@ -1,0 +1,13 @@
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .bg-start,.bg-play {
+    background-size: cover;
+    background-repeat: repeat-y;
+    background-position: center;
+    width: 100%;
+    height: 100vh; 
+    flex-direction: column;
+  }
