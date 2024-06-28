@@ -4,9 +4,8 @@ import { BackgroundAudio } from "./start";
 import BackgroundPlayMusic from './../audios/play.mp3';
 import Logo from '../images/valorantLogo.jpg';
 
-export default function Play() {
+export default function Play({ highScore, setHighScore }) {
     const [curScore, setCurScore] = useState(0);
-    const [highScore, setHighScore] = useState(0);
     const [cardList, setCardList] = useState([]);
     const [clickedCards, setClickedCards] = useState({});
     const [stage, setStage] = useState(0);
