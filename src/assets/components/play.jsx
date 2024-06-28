@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
+import { useState, useEffect, useRef, useCallback } from "react";
 import { BackgroundAudio } from "./start";
 import BackgroundPlayMusic from './../audios/play.mp3';
 import Logo from '../images/valorantLogo.jpg';
@@ -11,6 +12,23 @@ export default function Play() {
     const [stage, setStage] = useState(0);
     const stages = [3, 5, 7, 9, 11];
     const stageUpdated = useRef(false);
+    const navigateTo = useNavigate();
+    const maxScore = 35;
+    
+    const handleDefeatedPlayClick = useCallback(() => {
+        console.log("Defeated");
+        navigateTo("/endDefeated");
+    }, [navigateTo]);
+
+    const handleVictoryPlayClick = useCallback(() => {
+        navigateTo("/endVictory");
+    }, [navigateTo]);
+
+    useEffect(() => {
+        if (curScore === maxScore) {
+            handleVictoryPlayClick();
+        }
+    }, [curScore, handleVictoryPlayClick]);
 
     useEffect(() => {
         async function fetchData() {
@@ -43,11 +61,19 @@ export default function Play() {
 
     function handleCardClick(index) {
         if (!clickedCards[index]) {
-            setCurScore(prevScore => prevScore + 1);
+            setCurScore(prevScore => {
+                const newScore = prevScore + 1;
+                if (newScore > highScore) {
+                    setHighScore(newScore); 
+                }
+                return newScore;
+            });
             setClickedCards(prevClicked => ({
                 ...prevClicked,
                 [index]: true,
             }));
+        } else {
+            handleDefeatedPlayClick();
         }
     }
 
@@ -67,6 +93,22 @@ export default function Play() {
             }
         }
     }, [clickedCards, stage, stages]);
+
+    function Card({ index, imageURL, name, handleCardClick, clicked }) {
+        function handleClicked() {
+            handleCardClick(index);
+        }
+
+        return (
+            <button
+                className="bg-gray-200 hover:bg-gray-400 hover:cursor-pointer bg-opacity-50 mr-8 max-w-60 mb-8"
+                onClick={handleClicked}
+            >
+                <img className="mb-4" src={imageURL} alt="agentImage" />
+                <p className="text-center text-l font-semibold">{name}</p>
+            </button>
+        );
+    }
 
     // Shuffle cards when curScore changes
     useEffect(() => {
@@ -121,22 +163,4 @@ function processValorantData(data) {
         name: agent.displayName,
         image: agent.fullPortrait
     }));
-}
-
-function Card({ index, imageURL, name, handleCardClick, clicked }) {
-    function handleClicked() {
-        if (!clicked) {
-            handleCardClick(index);
-        }
-    }
-
-    return (
-        <button
-            className="bg-gray-200 hover:bg-gray-400 hover:cursor-pointer bg-opacity-50 mr-8 max-w-60 mb-8"
-            onClick={handleClicked}
-        >
-            <img className="mb-4" src={imageURL} alt="agentImage" />
-            <p className="text-center text-l font-semibold">{name}</p>
-        </button>
-    );
 }

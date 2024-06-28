@@ -3,7 +3,7 @@ html, body {
     margin: 0;
   }
   
-  .bg-start,.bg-play {
+  .bg-start,.bg-play,.bg-end {
     background-size: cover;
     background-repeat: repeat-y;
     background-position: center;

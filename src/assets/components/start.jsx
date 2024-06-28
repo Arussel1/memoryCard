@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from 'react-router-dom';
 import Logo from './../images/valorantLogo.jpg'
 import BackgroundMusicStart from './../audios/start.mp3'
 import soundMute from './../images/soundMute.svg'
 import soundPlay from './../images/soundPlay.svg'
-
 
 function BackgroundAudio({link}){
     function muteToggle(){
@@ -26,6 +26,13 @@ function BackgroundAudio({link}){
   };
 
 function Start(){
+  
+  const navigateTo = useNavigate();
+
+  function handlePlayClick(){
+    navigateTo("/play");
+  };
+
     return (
         <div className="bg-start">
             <div className="nav py-2 mb-40">
@@ -33,11 +40,12 @@ function Start(){
                 </div>
             <div className="mb-40 startText">
                 <p className=" block mx-auto text-center text-white  text-2xl my-4 font-bold font-valorant ">Welcome to Valorant HQ. Deep within the fortified walls of Kingdom Corp's stronghold, an agent has been captured, their fate hanging in the balance. Valorant HQ mobilizes swiftly, navigating through shadows and security protocols, determined to bring their comrade home safely from the heart of enemy territory. Are you ready to rescue our hero ?</p>
-                <button className="font-bold text-white bg-red-600 px-10 py-1.5 hover:bg-red-800 block mx-auto font-tungsten text-5xl ">PLAY</button>
+                <button className="font-bold text-white bg-red-600 px-10 py-1.5 hover:bg-red-800 block mx-auto font-tungsten text-5xl"  onClick={handlePlayClick}>PLAY</button>
             </div>
             <BackgroundAudio link={BackgroundMusicStart}></BackgroundAudio>
         </div>
     )
+  
 }
 
 export {Start, BackgroundAudio}
