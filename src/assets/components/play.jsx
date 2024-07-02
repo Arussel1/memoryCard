@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { useState, useEffect, useRef, useCallback } from "react";
 import { BackgroundAudio } from "./start";
@@ -9,6 +10,7 @@ export default function Play({ highScore, setHighScore }) {
     const [cardList, setCardList] = useState([]);
     const [clickedCards, setClickedCards] = useState({});
     const [stage, setStage] = useState(0);
+    const [processedData, setProcessedData] = useState([]);
     const stages = [3, 5, 7, 9, 11];
     const stageUpdated = useRef(false);
     const navigateTo = useNavigate();
@@ -33,16 +35,25 @@ export default function Play({ highScore, setHighScore }) {
         async function fetchData() {
             try {
                 const rawData = await getValorantData();
-                const processedData = processValorantData(rawData);
-                initializeCards(processedData);
-                stageUpdated.current = false; // Flag variable to avoid useEffect twice
+                const processed = processValorantData(rawData);
+                if (processed.length > 0) {
+                    setProcessedData(processed);
+                } else {
+                    console.error("Processed data is empty");
+                }
             } catch (error) {
                 console.error("Error fetching or processing data:", error);
             }
         }
-
         fetchData();
-    }, [stage]); 
+    }, []); 
+
+    useEffect(() => {
+        if (processedData.length > 0) {
+            initializeCards(processedData);
+            stageUpdated.current = false; // Flag variable to avoid useEffect twice
+        }
+    }, [stage, processedData]);
 
     function initializeCards(processedData) {
         const displayCardSet = new Set();
@@ -91,9 +102,9 @@ export default function Play({ highScore, setHighScore }) {
                 setClickedCards({});
             }
         }
-    }, [clickedCards, stage, stages]);
+    }, [clickedCards, stage]);
 
-    function Card({ index, imageURL, name, handleCardClick, clicked }) {
+    function Card({ index, imageURL, name, handleCardClick }) {
         function handleClicked() {
             handleCardClick(index);
         }
@@ -108,6 +119,13 @@ export default function Play({ highScore, setHighScore }) {
             </button>
         );
     }
+
+    Card.propTypes = {
+        index: PropTypes.number.isRequired,
+        imageURL: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        handleCardClick: PropTypes.func.isRequired,
+    };
 
     // Shuffle cards when curScore changes
     useEffect(() => {
@@ -163,3 +181,8 @@ function processValorantData(data) {
         image: agent.fullPortrait
     }));
 }
+
+Play.propTypes = {
+    highScore: PropTypes.number,
+    setHighScore: PropTypes.func.isRequired,
+};

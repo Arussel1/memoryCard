@@ -1,15 +1,16 @@
+import PropTypes from 'prop-types';
 import { useNavigate } from 'react-router-dom';
 import { BackgroundAudio } from "./start";
 import DefeatedMusic from './../audios/defeat.mp3';
-import VictoryMusic from './../audios/victory.mp3'
+import VictoryMusic from './../audios/victory.mp3';
 import Logo from '../images/valorantLogo.jpg';
 
-export default function End({defeated}){
+export default function End({ defeated }){
     const navigateTo = useNavigate();
     
     function handlePlayClick(){
       navigateTo("/play");
-    };
+    }
 
       const musicLink = defeated ? DefeatedMusic : VictoryMusic;
       const displayText = defeated ? "Unfortunate Battle, better luck next time." : "Congratulation for overcoming this overwhelming challenge"
@@ -27,3 +28,7 @@ export default function End({defeated}){
       )
     
   }
+
+End.propTypes = {
+    defeated: PropTypes.bool,
+};
